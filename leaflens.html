@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeafLens — Plant Health Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-50: #f0faf0;
+  --green-100: #d4f0d4;
+  --green-200: #a8e0a8;
+  --green-400: #5cb85c;
+  --green-600: #2d7a2d;
+  --green-800: #1a4d1a;
+  --green-900: #0d260d;
+  --earth-50: #faf7f0;
+  --earth-100: #f0e8d0;
+  --earth-400: #c8a96e;
+  --earth-600: #8b6914;
+  --earth-800: #5c4510;
+  --amber-400: #e8a020;
+  --amber-600: #b07010;
+  --red-400: #e05050;
+  --red-600: #a03030;
+  --bg: #f5f8f2;
+  --surface: #ffffff;
+  --text: #1a2a1a;
+  --text-muted: #5a7a5a;
+  --border: rgba(45,122,45,0.15);
+  --shadow: 0 2px 20px rgba(45,122,45,0.08);
+  --shadow-md: 0 8px 40px rgba(45,122,45,0.12);
+  --radius: 14px;
+  --radius-lg: 20px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── AUTH SCREENS ── */
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+}
+
+.auth-panel {
+  width: 55%;
+  background: linear-gradient(160deg, var(--green-800) 0%, var(--green-600) 50%, #3d8b3d 100%);
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-panel::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  border: 60px solid rgba(255,255,255,0.05);
+}
+
+.auth-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: -60px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  border: 40px solid rgba(255,255,255,0.05);
+}
+
+.auth-brand {
+  position: relative; z-index: 1;
+}
+
+.brand-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 38px;
+  color: #fff;
+  letter-spacing: -1px;
+}
+
+.brand-logo span { color: var(--green-200); }
+
+.brand-tagline {
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+
+.auth-hero { position: relative; z-index: 1; }
+
+.auth-hero h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 40px;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.auth-hero p {
+  color: rgba(255,255,255,0.75);
+  font-size: 15px;
+  max-width: 320px;
+  line-height: 1.7;
+}
+
+.auth-stats {
+  display: flex;
+  gap: 32px;
+  position: relative; z-index: 1;
+}
+
+.auth-stat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  color: #fff;
+}
+
+.auth-stat-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 2px;
+}
+
+.auth-form-side {
+  width: 45%;
+  background: var(--surface);
+  padding: 60px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-form-side h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 30px;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.auth-form-side p.sub {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 32px;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.field input, .field select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field input:focus {
+  border-color: var(--green-400);
+  background: #fff;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: var(--green-600);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 6px;
+}
+
+.btn-primary:hover { background: var(--green-800); }
+.btn-primary:active { transform: scale(0.99); }
+
+.auth-switch {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.auth-switch a {
+  color: var(--green-600);
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-switch a:hover { text-decoration: underline; }
+
+/* ── APP SHELL ── */
+.app { display: none; min-height: 100vh; flex-direction: column; }
+
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  color: var(--green-800);
+  letter-spacing: -0.5px;
+}
+.topbar-brand span { color: var(--green-400); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 6px;
+  border-radius: 40px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.user-chip:hover { background: var(--green-50); }
+
+.user-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--green-600);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600;
+}
+
+.user-name { font-size: 14px; font-weight: 500; }
+
+.btn-logout {
+  padding: 8px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: none;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.btn-logout:hover { border-color: var(--red-400); color: var(--red-600); }
+
+/* ── NAV ── */
+.nav-tabs {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex;
+  gap: 4px;
+}
+
+.nav-tab {
+  padding: 14px 18px;
+  border: none;
+  background: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.nav-tab:hover { color: var(--green-600); }
+
+.nav-tab.active {
+  color: var(--green-600);
+  border-bottom-color: var(--green-600);
+}
+
+.nav-icon { font-size: 16px; }
+
+/* ── MAIN CONTENT ── */
+.main { flex: 1; padding: 32px; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── DASHBOARD ── */
+.welcome-banner {
+  background: linear-gradient(135deg, var(--green-800) 0%, var(--green-600) 100%);
+  border-radius: var(--radius-lg);
+  padding: 32px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-banner::after {
+  content: '🌿';
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 80px;
+  opacity: 0.15;
+}
+
+.welcome-banner h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.welcome-banner p { color: rgba(255,255,255,0.75); font-size: 14px; }
+
+.btn-scan {
+  padding: 12px 28px;
+  background: #fff;
+  color: var(--green-700);
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  color: var(--green-800);
+}
+.btn-scan:hover { background: var(--green-50); transform: translateY(-1px); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  border-radius: 4px 0 0 4px;
+}
+
+.stat-card.green::before { background: var(--green-400); }
+.stat-card.amber::before { background: var(--amber-400); }
+.stat-card.red::before { background: var(--red-400); }
+.stat-card.blue::before { background: #4a90d9; }
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 34px;
+  color: var(--text);
+  line-height: 1;
+}
+
+.stat-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Recent Scans */
+.scan-list { display: flex; flex-direction: column; gap: 12px; }
+
+.scan-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.scan-item:hover { background: var(--green-50); }
+
+.scan-thumb {
+  width: 44px; height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--green-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.scan-info { flex: 1; }
+
+.scan-crop { font-size: 14px; font-weight: 500; }
+.scan-date { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-healthy { background: var(--green-100); color: var(--green-800); }
+.badge-warning { background: #fff3cd; color: #856404; }
+.badge-danger { background: #fde8e8; color: var(--red-600); }
+
+/* Health Meter */
+.health-ring-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.health-ring-wrap svg { overflow: visible; }
+
+.tips-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+
+.tip-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.tip-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green-400);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+/* ── UPLOAD / SCAN PAGE ── */
+.upload-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+.upload-zone {
+  border: 2px dashed var(--green-400);
+  border-radius: var(--radius-lg);
+  padding: 50px 30px;
+  text-align: center;
+  background: var(--green-50);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  background: var(--green-100);
+  border-color: var(--green-600);
+}
+
+.upload-icon { font-size: 52px; margin-bottom: 16px; }
+.upload-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.upload-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+.upload-zone input[type="file"] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
+}
+
+.btn-upload {
+  padding: 11px 26px;
+  background: var(--green-600);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+  pointer-events: none;
+}
+
+.preview-box {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.preview-img {
+  width: 100%;
+  border-radius: var(--radius);
+  object-fit: cover;
+  max-height: 280px;
+}
+
+.btn-analyze {
+  width: 100%;
+  padding: 14px;
+  background: var(--green-600);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-analyze:hover { background: var(--green-800); }
+
+.crop-fields { display: flex; flex-direction: column; gap: 14px; }
+.crop-fields .field { margin-bottom: 0; }
+
+/* Result Panel */
+.result-panel {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.result-icon { font-size: 44px; }
+
+.result-disease { font-size: 20px; font-weight: 600; }
+.result-confidence { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+.severity-bar-wrap { margin-top: 8px; }
+
+.severity-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.severity-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--green-100);
+  overflow: hidden;
+}
+
+.severity-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.2s ease;
+}
+
+.severity-fill.low { background: var(--green-400); }
+.severity-fill.medium { background: var(--amber-400); }
+.severity-fill.high { background: var(--red-400); }
+
+.treatment-section { }
+
+.treatment-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.treatment-steps { display: flex; flex-direction: column; gap: 10px; }
+
+.treatment-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.step-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--green-600);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+.products-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.product-chip {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 13px;
+  background: var(--surface);
+}
+
+.product-chip-label { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; }
+.product-chip-name { font-weight: 500; }
+
+.btn-save {
+  width: 100%;
+  padding: 12px;
+  background: var(--earth-50);
+  color: var(--earth-800);
+  border: 1.5px solid var(--earth-400);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-save:hover { background: var(--earth-100); }
+
+/* Loading */
+.loading-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.85);
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.loading-overlay.show { display: flex; }
+
+.spinner {
+  width: 56px; height: 56px;
+  border: 4px solid var(--green-100);
+  border-top-color: var(--green-600);
+  border-radius: 50%;
+  animation: spin 0.85s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text {
+  font-size: 15px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.loading-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin-top: -12px;
+}
+
+/* ── REPORTS PAGE ── */
+.report-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 18px;
+  border-radius: 30px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.filter-btn:hover { border-color: var(--green-400); color: var(--green-600); }
+.filter-btn.active { background: var(--green-600); color: #fff; border-color: var(--green-600); }
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.report-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+
+.report-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.report-card-img {
+  width: 100%;
+  height: 140px;
+  background: var(--green-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  position: relative;
+}
+
+.report-card-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+}
+
+.report-card-body { padding: 14px 16px; }
+
+.report-card-crop {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.report-card-disease {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.report-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── PROFILE PAGE ── */
+.profile-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+}
+
+.profile-sidebar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  height: fit-content;
+}
+
+.profile-avatar-lg {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--green-600);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.profile-name { font-size: 18px; font-weight: 600; }
+.profile-role { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+.profile-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+
+.profile-meta-icon { font-size: 16px; }
+
+.profile-form { display: flex; flex-direction: column; gap: 18px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.btn-save-profile {
+  align-self: flex-start;
+  padding: 12px 30px;
+  background: var(--green-600);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+}
+
+/* ── CHART BARS ── */
+.mini-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; padding-top: 10px; }
+
+.bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+
+.bar {
+  width: 100%;
+  background: var(--green-400);
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: height 0.6s ease;
+}
+
+.bar.amber { background: var(--amber-400); }
+.bar.red { background: var(--red-400); }
+
+.bar-label { font-size: 10px; color: var(--text-muted); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  background: var(--green-800);
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  z-index: 300;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .auth-panel { display: none; }
+  .auth-form-side { width: 100%; padding: 40px 28px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .upload-layout { grid-template-columns: 1fr; }
+  .report-grid { grid-template-columns: repeat(2, 1fr); }
+  .profile-layout { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .main { padding: 16px; }
+  .report-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .nav-tabs { gap: 0; padding: 0 12px; }
+  .nav-tab { padding: 14px 10px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LOGIN SCREEN ═══════════════ -->
+<div id="loginScreen" class="auth-screen">
+  <div class="auth-panel">
+    <div class="auth-brand">
+      <div class="brand-logo">Leaf<span>Lens</span></div>
+      <div class="brand-tagline">AI-Powered Plant Health Monitoring</div>
+    </div>
+    <div class="auth-hero">
+      <h2>Grow smarter, harvest better</h2>
+      <p>Detect crop diseases early with AI image analysis and get expert treatment recommendations — right on your phone.</p>
+    </div>
+    <div class="auth-stats">
+      <div>
+        <div class="auth-stat-num">38+</div>
+        <div class="auth-stat-label">Diseases detected</div>
+      </div>
+      <div>
+        <div class="auth-stat-num">94%</div>
+        <div class="auth-stat-label">Accuracy rate</div>
+      </div>
+      <div>
+        <div class="auth-stat-num">12K+</div>
+        <div class="auth-stat-label">Farmers using</div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-form-side">
+    <h3>Welcome back</h3>
+    <p class="sub">Sign in to your farmer portal</p>
+    <div class="field">
+      <label>Phone / Email</label>
+      <input type="text" id="loginEmail" placeholder="Enter your phone or email" value="ravi@farm.in">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="loginPwd" placeholder="Enter password" value="••••••••">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Sign In →</button>
+    <div class="auth-switch">
+      Don't have an account? <a onclick="showSignup()">Register here</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SIGNUP SCREEN ═══════════════ -->
+<div id="signupScreen" class="auth-screen" style="display:none;">
+  <div class="auth-panel">
+    <div class="auth-brand">
+      <div class="brand-logo">Leaf<span>Lens</span></div>
+      <div class="brand-tagline">AI-Powered Plant Health Monitoring</div>
+    </div>
+    <div class="auth-hero">
+      <h2>Join 12,000+ farmers using AI</h2>
+      <p>Get started free. No expertise needed — just take a photo and let LeafLens do the rest.</p>
+    </div>
+    <div class="auth-stats">
+      <div>
+        <div class="auth-stat-num">Free</div>
+        <div class="auth-stat-label">To get started</div>
+      </div>
+      <div>
+        <div class="auth-stat-num">2 min</div>
+        <div class="auth-stat-label">Setup time</div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-form-side">
+    <h3>Create account</h3>
+    <p class="sub">Set up your free farmer portal</p>
+    <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="field"><label>First Name</label><input type="text" placeholder="Ravi"></div>
+      <div class="field"><label>Last Name</label><input type="text" placeholder="Kumar"></div>
+    </div>
+    <div class="field"><label>Phone / Email</label><input type="text" placeholder="Phone or email"></div>
+    <div class="field">
+      <label>Main Crop</label>
+      <select>
+        <option>Select crop</option>
+        <option>Tomato</option>
+        <option>Rice</option>
+        <option>Wheat</option>
+        <option>Cotton</option>
+        <option>Sugarcane</option>
+        <option>Maize</option>
+        <option>Potato</option>
+      </select>
+    </div>
+    <div class="field"><label>Password</label><input type="password" placeholder="Create password"></div>
+    <button class="btn-primary" onclick="doLogin()">Create Account →</button>
+    <div class="auth-switch">
+      Already have an account? <a onclick="showLogin()">Sign in</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN APP ═══════════════ -->
+<div id="app" class="app">
+
+  <div class="topbar">
+    <div class="topbar-brand">Leaf<span>Lens</span></div>
+    <div class="topbar-right">
+      <div class="user-chip">
+        <div class="user-avatar" id="topAvatar">RK</div>
+        <span class="user-name" id="topName">Ravi Kumar</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('dashboard',this)">
+      <span class="nav-icon">🏠</span> Dashboard
+    </button>
+    <button class="nav-tab" onclick="showPage('scan',this)">
+      <span class="nav-icon">🔬</span> Scan Leaf
+    </button>
+    <button class="nav-tab" onclick="showPage('reports',this)">
+      <span class="nav-icon">📋</span> Reports
+    </button>
+    <button class="nav-tab" onclick="showPage('profile',this)">
+      <span class="nav-icon">👤</span> Profile
+    </button>
+  </div>
+
+  <div class="main">
+
+    <!-- ─── DASHBOARD PAGE ─── -->
+    <div id="page-dashboard" class="page active">
+      <div class="welcome-banner">
+        <div>
+          <h2 id="welcomeMsg">Good morning, Ravi! 🌱</h2>
+          <p>Your fields look mostly healthy today. 2 crops need attention.</p>
+        </div>
+        <button class="btn-scan" onclick="showPage('scan', document.querySelectorAll('.nav-tab')[1])">
+          + Scan New Leaf
+        </button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <div class="stat-label">Healthy Crops</div>
+          <div class="stat-value">14</div>
+          <div class="stat-sub">↑ 2 from last week</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-label">Need Attention</div>
+          <div class="stat-value">2</div>
+          <div class="stat-sub">Tomato, Cotton</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Diseased</div>
+          <div class="stat-value">1</div>
+          <div class="stat-sub">Treatment in progress</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-label">Total Scans</div>
+          <div class="stat-value">47</div>
+          <div class="stat-sub">This month</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">📸 Recent Scans</div>
+          <div class="scan-list">
+            <div class="scan-item">
+              <div class="scan-thumb">🍅</div>
+              <div class="scan-info">
+                <div class="scan-crop">Tomato — Field A</div>
+                <div class="scan-date">Today, 8:30 AM</div>
+              </div>
+              <span class="badge badge-danger">Early Blight</span>
+            </div>
+            <div class="scan-item">
+              <div class="scan-thumb">🌾</div>
+              <div class="scan-info">
+                <div class="scan-crop">Rice — Field B</div>
+                <div class="scan-date">Yesterday, 2:15 PM</div>
+              </div>
+              <span class="badge badge-healthy">Healthy</span>
+            </div>
+            <div class="scan-item">
+              <div class="scan-thumb">🌿</div>
+              <div class="scan-info">
+                <div class="scan-crop">Cotton — Field C</div>
+                <div class="scan-date">16 May, 10:00 AM</div>
+              </div>
+              <span class="badge badge-warning">Leaf Curl</span>
+            </div>
+            <div class="scan-item">
+              <div class="scan-thumb">🥔</div>
+              <div class="scan-info">
+                <div class="scan-crop">Potato — Field D</div>
+                <div class="scan-date">15 May, 7:45 AM</div>
+              </div>
+              <span class="badge badge-healthy">Healthy</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📊 Weekly Scan Activity</div>
+          <div class="mini-chart" id="weekChart"></div>
+          <div style="margin-top:18px;">
+            <div class="card-title" style="margin-bottom:12px;">💡 Farm Tips</div>
+            <div class="tips-list">
+              <div class="tip-item">
+                <div class="tip-dot"></div>
+                <span>Apply copper-based fungicide to tomato plants in Field A within 48 hours.</span>
+              </div>
+              <div class="tip-item">
+                <div class="tip-dot"></div>
+                <span>Cotton in Field C shows early signs of whitefly — consider neem oil spray.</span>
+              </div>
+              <div class="tip-item">
+                <div class="tip-dot"></div>
+                <span>Ideal time to scan: early morning when leaves are fresh and dry.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SCAN PAGE ─── -->
+    <div id="page-scan" class="page">
+      <div style="margin-bottom:22px;">
+        <h2 style="font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px;">Leaf Disease Scanner</h2>
+        <p style="color:var(--text-muted);font-size:14px;">Upload a clear photo of the leaf and our AI will diagnose it in seconds.</p>
+      </div>
+
+      <div class="upload-layout">
+        <!-- Left: Upload + Fields -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" accept="image/*" id="fileInput" onchange="handleFile(event)">
+            <div id="uploadPrompt">
+              <div class="upload-icon">📷</div>
+              <div class="upload-title">Drop your leaf photo here</div>
+              <div class="upload-sub">or click to browse from gallery<br>Supports JPG, PNG up to 10MB</div>
+              <div class="btn-upload">Choose Photo</div>
+            </div>
+            <div id="previewWrap" style="display:none;">
+              <img id="previewImg" class="preview-img" alt="Leaf preview">
+            </div>
+          </div>
+
+          <div class="card crop-fields">
+            <div class="card-title" style="margin-bottom:14px;">🌾 Crop Details</div>
+            <div class="field">
+              <label>Crop Type</label>
+              <select id="cropType">
+                <option value="">Select crop</option>
+                <option>Tomato</option>
+                <option>Rice</option>
+                <option>Wheat</option>
+                <option>Cotton</option>
+                <option>Sugarcane</option>
+                <option>Maize</option>
+                <option>Potato</option>
+                <option>Chilli</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Field / Location</label>
+              <input type="text" placeholder="e.g. Field A, North Block" id="fieldName">
+            </div>
+            <div class="field">
+              <label>Symptoms noticed</label>
+              <input type="text" placeholder="e.g. yellow spots, wilting" id="symptoms">
+            </div>
+            <button class="btn-analyze" onclick="runAnalysis()">
+              🔬 Analyze with AI
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Results -->
+        <div>
+          <div class="card" id="resultEmpty" style="padding:60px 30px;text-align:center;color:var(--text-muted);">
+            <div style="font-size:52px;margin-bottom:16px;">🌱</div>
+            <div style="font-size:15px;font-weight:500;margin-bottom:8px;">No scan yet</div>
+            <div style="font-size:13px;">Upload a leaf photo and hit "Analyze" to see the diagnosis here.</div>
+          </div>
+
+          <div class="card result-panel" id="resultPanel">
+            <div class="result-header" id="resultHeader">
+              <div class="result-icon" id="resultIcon">🍅</div>
+              <div style="flex:1;">
+                <div class="result-disease" id="resultDisease">Early Blight</div>
+                <div class="result-confidence" id="resultConf">94.2% confidence · Tomato</div>
+                <div class="severity-bar-wrap">
+                  <div class="severity-label">
+                    <span>Severity</span>
+                    <span id="severityPct">Moderate (58%)</span>
+                  </div>
+                  <div class="severity-bar">
+                    <div class="severity-fill medium" id="severityFill" style="width:0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="treatment-section">
+              <div class="treatment-title">📋 Treatment Plan</div>
+              <div class="treatment-steps" id="treatmentSteps"></div>
+            </div>
+
+            <div>
+              <div class="treatment-title" style="margin-top:4px;">💊 Recommended Products</div>
+              <div class="products-grid" id="productsGrid"></div>
+            </div>
+
+            <button class="btn-save" onclick="saveReport()">💾 Save to Reports</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── REPORTS PAGE ─── -->
+    <div id="page-reports" class="page">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <div>
+          <h2 style="font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px;">Crop Health Reports</h2>
+          <p style="color:var(--text-muted);font-size:14px;">All your scan history and analysis reports.</p>
+        </div>
+      </div>
+
+      <div class="report-filters">
+        <button class="filter-btn active" onclick="filterReports(this,'all')">All</button>
+        <button class="filter-btn" onclick="filterReports(this,'healthy')">Healthy</button>
+        <button class="filter-btn" onclick="filterReports(this,'warning')">Needs Care</button>
+        <button class="filter-btn" onclick="filterReports(this,'danger')">Diseased</button>
+      </div>
+
+      <div class="report-grid" id="reportGrid"></div>
+    </div>
+
+    <!-- ─── PROFILE PAGE ─── -->
+    <div id="page-profile" class="page">
+      <div style="margin-bottom:22px;">
+        <h2 style="font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px;">My Profile</h2>
+        <p style="color:var(--text-muted);font-size:14px;">Manage your farmer account and preferences.</p>
+      </div>
+
+      <div class="profile-layout">
+        <div>
+          <div class="profile-sidebar">
+            <div class="profile-avatar-lg" id="profileAvatarLg">RK</div>
+            <div class="profile-name" id="profileNameDisplay">Ravi Kumar</div>
+            <div class="profile-role">Farmer · Tamil Nadu</div>
+            <div class="profile-meta-row">
+              <span class="profile-meta-icon">📱</span>
+              <span>+91 98765 43210</span>
+            </div>
+            <div class="profile-meta-row">
+              <span class="profile-meta-icon">📍</span>
+              <span>Coimbatore, TN</span>
+            </div>
+            <div class="profile-meta-row">
+              <span class="profile-meta-icon">🌾</span>
+              <span>Tomato, Cotton</span>
+            </div>
+            <div class="profile-meta-row">
+              <span class="profile-meta-icon">📅</span>
+              <span>Member since Jan 2024</span>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:16px;">
+            <div class="card-title">📈 My Stats</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+              <div style="display:flex;justify-content:space-between;font-size:14px;">
+                <span style="color:var(--text-muted);">Total Scans</span>
+                <strong>47</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:14px;">
+                <span style="color:var(--text-muted);">Diseases Caught</span>
+                <strong>8</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:14px;">
+                <span style="color:var(--text-muted);">Crops Monitored</span>
+                <strong>6</strong>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:14px;">
+                <span style="color:var(--text-muted);">Estimated Savings</span>
+                <strong style="color:var(--green-600);">₹18,400</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title" style="margin-bottom:20px;">✏️ Edit Profile</div>
+          <div class="profile-form">
+            <div class="form-row">
+              <div class="field"><label>First Name</label><input type="text" value="Ravi"></div>
+              <div class="field"><label>Last Name</label><input type="text" value="Kumar"></div>
+            </div>
+            <div class="field"><label>Phone Number</label><input type="text" value="+91 98765 43210"></div>
+            <div class="field"><label>Email Address</label><input type="email" value="ravi@farm.in"></div>
+            <div class="form-row">
+              <div class="field"><label>Village / Town</label><input type="text" value="Coimbatore"></div>
+              <div class="field"><label>State</label>
+                <select>
+                  <option selected>Tamil Nadu</option>
+                  <option>Andhra Pradesh</option>
+                  <option>Karnataka</option>
+                  <option>Maharashtra</option>
+                  <option>Punjab</option>
+                  <option>Uttar Pradesh</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><label>Land Size (acres)</label><input type="number" value="12"></div>
+            <div class="field"><label>Primary Crops</label><input type="text" value="Tomato, Cotton, Rice"></div>
+            <button class="btn-save-profile" onclick="saveProfile()">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Analyzing leaf image...</div>
+  <div class="loading-sub" id="loadingSubText">AI model processing · Please wait</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ <span id="toastMsg">Saved!</span></div>
+
+<script>
+// ── STATE ──
+let currentUser = { name: 'Ravi Kumar', initials: 'RK' };
+let savedReports = [
+  { crop: 'Tomato', disease: 'Early Blight', status: 'danger', icon: '🍅', date: '17 May 2025', field: 'Field A', confidence: '94.2%' },
+  { crop: 'Rice', disease: 'Healthy', status: 'healthy', icon: '🌾', date: '16 May 2025', field: 'Field B', confidence: '97.8%' },
+  { crop: 'Cotton', disease: 'Leaf Curl Virus', status: 'warning', icon: '🌿', date: '16 May 2025', field: 'Field C', confidence: '88.5%' },
+  { crop: 'Potato', disease: 'Healthy', status: 'healthy', icon: '🥔', date: '15 May 2025', field: 'Field D', confidence: '96.1%' },
+  { crop: 'Wheat', disease: 'Yellow Rust', status: 'danger', icon: '🌾', date: '12 May 2025', field: 'Field E', confidence: '91.3%' },
+  { crop: 'Maize', disease: 'Healthy', status: 'healthy', icon: '🌽', date: '10 May 2025', field: 'Field F', confidence: '98.2%' },
+];
+
+const diseases = {
+  'Tomato': {
+    name: 'Early Blight', icon: '🍅', confidence: 94.2, severity: 58, severityLevel: 'medium',
+    severityText: 'Moderate (58%)',
+    bgColor: '#fff5f5',
+    treatments: [
+      'Remove and destroy all infected leaves immediately to prevent spread.',
+      'Apply Mancozeb 75 WP (2g per litre) or Copper Oxychloride spray uniformly on all leaves.',
+      'Ensure proper spacing between plants for better air circulation.',
+      'Avoid overhead irrigation — water at the base of plants in the morning.'
+    ],
+    products: [
+      { label: 'Fungicide', name: 'Mancozeb 75 WP' },
+      { label: 'Alternative', name: 'Chlorothalonil 75 WP' },
+      { label: 'Organic Option', name: 'Neem Oil 3000 PPM' },
+      { label: 'Preventive', name: 'Copper Oxychloride' }
+    ]
+  },
+  'Rice': {
+    name: 'Healthy', icon: '🌾', confidence: 97.8, severity: 5, severityLevel: 'low',
+    severityText: 'Very Low (5%)',
+    bgColor: '#f0faf0',
+    treatments: [
+      'Your rice crop looks completely healthy — great farming practice!',
+      'Continue current irrigation and fertilization schedule.',
+      'Scan again in 7–10 days to monitor for any changes.',
+      'Ensure proper drainage to avoid waterlogging during heavy rain.'
+    ],
+    products: [
+      { label: 'Preventive', name: 'Neem-based spray' },
+      { label: 'Nutrition', name: 'NPK 19-19-19' },
+      { label: 'Soil Health', name: 'Micronutrient Mix' },
+      { label: 'Bio-control', name: 'Pseudomonas sp.' }
+    ]
+  },
+  'Cotton': {
+    name: 'Leaf Curl Virus', icon: '🌿', confidence: 88.5, severity: 42, severityLevel: 'medium',
+    severityText: 'Moderate (42%)',
+    bgColor: '#fffbf0',
+    treatments: [
+      'Identify and remove severely infected plants to prevent virus spread.',
+      'Apply systemic insecticide (Imidacloprid 17.8 SL) to control whitefly vectors.',
+      'Spray Neem oil 5ml/L or Insecticidal soap to manage whitefly population.',
+      'Avoid planting susceptible varieties in adjacent fields.'
+    ],
+    products: [
+      { label: 'Insecticide', name: 'Imidacloprid 17.8 SL' },
+      { label: 'Organic', name: 'Neem Oil 5000 PPM' },
+      { label: 'Spreader', name: 'Silwet L-77' },
+      { label: 'Resistant Var.', name: 'RCH-2 BT Cotton' }
+    ]
+  },
+  'Wheat': {
+    name: 'Yellow Rust', icon: '🌾', confidence: 91.3, severity: 71, severityLevel: 'high',
+    severityText: 'Severe (71%)',
+    bgColor: '#fff8f0',
+    treatments: [
+      '⚠️ Urgent: Apply Propiconazole 25 EC (1ml/L) or Tebuconazole immediately.',
+      'Spray fungicide in the early morning or late evening for best absorption.',
+      'Repeat spray after 10–14 days if symptoms persist.',
+      'Consult your local Krishi Vigyan Kendra (KVK) for variety-specific guidance.'
+    ],
+    products: [
+      { label: 'Fungicide', name: 'Propiconazole 25 EC' },
+      { label: 'Alternative', name: 'Tebuconazole 250 EW' },
+      { label: 'Adjuvant', name: 'Tween-20 Spreader' },
+      { label: 'Resistant Var.', name: 'WH-1105 Wheat' }
+    ]
+  },
+  'Potato': {
+    name: 'Healthy', icon: '🥔', confidence: 96.1, severity: 3, severityLevel: 'low',
+    severityText: 'Very Low (3%)',
+    bgColor: '#f0faf0',
+    treatments: [
+      'Potato crop is in excellent health — no disease detected.',
+      'Maintain current soil moisture levels with drip irrigation.',
+      'Apply potassium-rich fertilizer to improve tuber quality.',
+      'Monitor for late blight symptoms after heavy rainfall.'
+    ],
+    products: [
+      { label: 'Preventive', name: 'Mancozeb WP (preventive)' },
+      { label: 'Fertilizer', name: 'Potassium Sulfate' },
+      { label: 'Bio-input', name: 'Trichoderma viride' },
+      { label: 'Growth', name: 'Humic Acid 12%' }
+    ]
+  },
+  'Sugarcane': {
+    name: 'Red Rot', icon: '🎋', confidence: 86.7, severity: 65, severityLevel: 'high',
+    severityText: 'Severe (65%)',
+    bgColor: '#fff5f5',
+    treatments: [
+      'Remove and burn all affected stalks to prevent soil-borne spread.',
+      'Treat seed stools with Carbendazim 50 WP (1g/L) before planting.',
+      'Avoid waterlogging — improve drainage channels immediately.',
+      'Use resistant varieties like Co-86032 or CoC-671 in next season.'
+    ],
+    products: [
+      { label: 'Fungicide', name: 'Carbendazim 50 WP' },
+      { label: 'Soil drench', name: 'Metalaxyl MZ 72 WP' },
+      { label: 'Bio-agent', name: 'Trichoderma harzianum' },
+      { label: 'Resistant Var.', name: 'Co-86032 Cane' }
+    ]
+  },
+  'Maize': {
+    name: 'Healthy', icon: '🌽', confidence: 98.2, severity: 2, severityLevel: 'low',
+    severityText: 'Very Low (2%)',
+    bgColor: '#f0faf0',
+    treatments: [
+      'Maize crop is perfectly healthy — excellent condition!',
+      'Ensure timely top dressing of Urea at 3–4 leaf stage.',
+      'Watch for fall armyworm during early growth stages.',
+      'Schedule next scan in 10 days to track growth progress.'
+    ],
+    products: [
+      { label: 'Fertilizer', name: 'Urea (top dressing)' },
+      { label: 'Preventive', name: 'Emamectin Benzoate' },
+      { label: 'Growth', name: 'Zinc Sulphate 21%' },
+      { label: 'Bio-control', name: 'NPV of S.frugiperda' }
+    ]
+  },
+  'Chilli': {
+    name: 'Anthracnose', icon: '🌶️', confidence: 90.4, severity: 48, severityLevel: 'medium',
+    severityText: 'Moderate (48%)',
+    bgColor: '#fff5f5',
+    treatments: [
+      'Remove all infected fruits and leaves and dispose away from field.',
+      'Apply Carbendazim 50 WP (1g/L) or Thiophanate Methyl 70 WP.',
+      'Avoid excess nitrogen fertilization which promotes disease.',
+      'Ensure proper spacing and avoid wet foliage by drip irrigation.'
+    ],
+    products: [
+      { label: 'Fungicide', name: 'Carbendazim 50 WP' },
+      { label: 'Alternative', name: 'Thiophanate Methyl 70' },
+      { label: 'Organic', name: 'Bordeaux Mixture 1%' },
+      { label: 'Bio-control', name: 'Bacillus subtilis' }
+    ]
+  }
+};
+
+const defaultDisease = {
+  name: 'Disease Detected', icon: '🍃', confidence: 89.3, severity: 52, severityLevel: 'medium',
+  severityText: 'Moderate (52%)', bgColor: '#f5f5ff',
+  treatments: [
+    'Isolate the affected plants from healthy crops immediately.',
+    'Apply a broad-spectrum fungicide as a precaution.',
+    'Monitor closely over the next 48–72 hours for progression.',
+    'Consult your local agricultural extension officer for verification.'
+  ],
+  products: [
+    { label: 'Fungicide', name: 'Mancozeb 75 WP' },
+    { label: 'Insecticide', name: 'Imidacloprid 17.8 SL' },
+    { label: 'Organic', name: 'Neem Oil 3000 PPM' },
+    { label: 'Bio-control', name: 'Trichoderma sp.' }
+  ]
+};
+
+// ── AUTH ──
+function doLogin() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('signupScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  updateGreeting();
+  buildWeekChart();
+  renderReports('all');
+}
+
+function doLogout() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+function showSignup() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('signupScreen').style.display = 'flex';
+}
+
+function showLogin() {
+  document.getElementById('signupScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+// ── NAV ──
+function showPage(name, tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  tab.classList.add('active');
+}
+
+// ── GREETING ──
+function updateGreeting() {
+  const h = new Date().getHours();
+  const g = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+  document.getElementById('welcomeMsg').textContent = `Good ${g}, Ravi! 🌱`;
+}
+
+// ── WEEK CHART ──
+function buildWeekChart() {
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const vals = [3,7,5,9,4,8,6];
+  const max = Math.max(...vals);
+  const chart = document.getElementById('weekChart');
+  chart.innerHTML = days.map((d,i) => `
+    <div class="bar-col">
+      <div class="bar ${vals[i] > 7 ? 'amber' : ''}" style="height:${Math.round(vals[i]/max*65)}px;"></div>
+      <div class="bar-label">${d}</div>
+    </div>
+  `).join('');
+}
+
+// ── FILE UPLOAD ──
+function handleFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById('uploadPrompt').style.display = 'none';
+    document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('previewImg').src = ev.target.result;
+    document.getElementById('uploadZone').style.padding = '12px';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── ANALYSIS ──
+async function runAnalysis() {
+  const cropType = document.getElementById('cropType').value;
+  const fieldName = document.getElementById('fieldName').value;
+
+  const overlay = document.getElementById('loadingOverlay');
+  const loadingMsgs = [
+    ['Scanning leaf image...', 'Detecting edges and features'],
+    ['Running AI model...', 'Processing with plant disease classifier'],
+    ['Matching disease patterns...', 'Cross-referencing with 38+ disease database'],
+    ['Generating treatment plan...', 'Preparing recommendations for your region']
+  ];
+
+  overlay.classList.add('show');
+  let step = 0;
+  const interval = setInterval(() => {
+    if (step < loadingMsgs.length) {
+      document.getElementById('loadingText').textContent = loadingMsgs[step][0];
+      document.getElementById('loadingSubText').textContent = loadingMsgs[step][1];
+      step++;
+    }
+  }, 700);
+
+  // Simulate AI API call
+  await new Promise(r => setTimeout(r, 3200));
+
+  clearInterval(interval);
+  overlay.classList.remove('show');
+
+  const result = diseases[cropType] || defaultDisease;
+  showResult(result, cropType);
+}
+
+function showResult(data, cropType) {
+  document.getElementById('resultEmpty').style.display = 'none';
+  const panel = document.getElementById('resultPanel');
+  panel.style.display = 'flex';
+
+  document.getElementById('resultIcon').textContent = data.icon;
+  document.getElementById('resultDisease').textContent = data.name;
+  document.getElementById('resultConf').textContent =
+    `${data.confidence}% confidence · ${cropType || 'Unknown crop'}`;
+  document.getElementById('severityPct').textContent = data.severityText;
+
+  const fill = document.getElementById('severityFill');
+  fill.className = `severity-fill ${data.severityLevel}`;
+  fill.style.width = '0%';
+  setTimeout(() => fill.style.width = data.severity + '%', 100);
+
+  document.getElementById('treatmentSteps').innerHTML = data.treatments.map((t,i) => `
+    <div class="treatment-step">
+      <div class="step-num">${i+1}</div>
+      <div class="step-text">${t}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('productsGrid').innerHTML = data.products.map(p => `
+    <div class="product-chip">
+      <div class="product-chip-label">${p.label}</div>
+      <div class="product-chip-name">${p.name}</div>
+    </div>
+  `).join('');
+
+  const header = document.getElementById('resultHeader');
+  const colors = { low: '#f0faf0', medium: '#fffbf0', high: '#fff5f5' };
+  header.style.background = colors[data.severityLevel] || '#f5f5f5';
+}
+
+// ── REPORTS ──
+function renderReports(filter) {
+  const grid = document.getElementById('reportGrid');
+  const filtered = filter === 'all' ? savedReports : savedReports.filter(r => r.status === filter);
+
+  grid.innerHTML = filtered.map(r => `
+    <div class="report-card">
+      <div class="report-card-img">
+        ${r.icon}
+        <div class="report-card-badge">
+          <span class="badge badge-${r.status}">
+            ${r.status === 'healthy' ? 'Healthy' : r.status === 'warning' ? 'Needs Care' : 'Diseased'}
+          </span>
+        </div>
+      </div>
+      <div class="report-card-body">
+        <div class="report-card-crop">${r.crop}</div>
+        <div class="report-card-disease">${r.disease}</div>
+        <div class="report-card-meta">
+          <span>📍 ${r.field}</span>
+          <span>${r.date}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterReports(btn, filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderReports(filter);
+}
+
+// ── SAVE REPORT ──
+function saveReport() {
+  const crop = document.getElementById('cropType').value || 'Unknown';
+  const field = document.getElementById('fieldName').value || 'Unknown Field';
+  const dis = diseases[crop] || defaultDisease;
+  savedReports.unshift({
+    crop, disease: dis.name, status: dis.severityLevel === 'low' ? 'healthy' : dis.severityLevel === 'medium' ? 'warning' : 'danger',
+    icon: dis.icon, date: new Date().toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}),
+    field, confidence: dis.confidence + '%'
+  });
+  showToast('Report saved to your history!');
+}
+
+// ── PROFILE ──
+function saveProfile() {
+  showToast('Profile updated successfully!');
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// Drag-and-drop
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  zone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const fakeEvent = { target: { files: [file] } };
+    handleFile(fakeEvent);
+  }
+});
+</script>
+</body>
+</html>
