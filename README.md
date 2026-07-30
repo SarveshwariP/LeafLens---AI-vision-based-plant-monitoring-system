@@ -1,5 +1,3 @@
-# 🌿 LeafLens – AI Vision-Based Plant Monitoring System
-
 ## 📌 Overview
 LeafLens is an AI-powered plant monitoring system that detects plant diseases from leaf images using deep learning and computer vision. The system helps farmers identify plant health issues early and provides disease predictions through a user-friendly web interface.
 
